@@ -5,7 +5,7 @@ This is a stack for run Symfony 5, PHP 8 using docker-compose tool
 First, clone repository:
 
 ```bash
-$ git clone https://github.com/docker-symfony.git
+$ git clone https://github.com/pjurasek/registration-with-api.git
 ```
 
 Run:
