@@ -1,0 +1,41 @@
+version: '3.8'
+
+services:
+  service-postgres:
+    container_name: postgres12
+    image: postgres:12
+    restart: always
+    environment:
+       - POSTGRES_PASSWORD=${DATABASE_PASSWORD}
+       - POSTGRES_DB=${DATABASE_NAME}
+    ports:
+        - 15432:5432
+
+  service-php-fpm:
+    container_name: php8-fpm
+    build:
+      context: ./php-fpm
+    depends_on:
+      - service-postgres
+    environment:
+      - APP_ENV=${APP_ENV}
+      - APP_SECRET=${APP_SECRET}
+      - DATABASE_URL=${DATABASE_URL}
+    volumes:
+      - ./../symfony/:/var/www
+
+  service-nginx:
+    container_name: my-nginx
+    build:
+      context: ./nginx
+    volumes:
+      - ./../symfony/:/var/www
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf
+      - ./nginx/sites/:/etc/nginx/sites-available
+      - ./nginx/conf.d/:/etc/nginx/conf.d
+      - ./logs:/var/log
+    depends_on:
+      - service-php-fpm
+    ports:
+      - "80:80"
+      - "443:443"
