@@ -15,7 +15,7 @@ $ docker-compose up -d --build
 
 ### How it works?
 The `docker-compose` built images:
-- `mysql`: This is the MySQL database container.
+- `postgres`: This is the Postgres database container.
 - `php-fpm`: This is the PHP FPM container including the application volume mounted on.
 - `nginx`: This is the Nginx web server container in which php volume are mounted on.
 
@@ -29,4 +29,23 @@ $ docker-compose ps
 Remove container
 ```bash
 $ docker container rm -f <id-container>
+```
+
+### Registration form
+
+Registration form is available on the URL
+
+```
+http://localhost/register
+```
+
+Show all registered users is available on the URL
+
+```
+http://localhost/show/all
+```
+
+API endpoints are available on the URL
+```
+http://localhost/api
 ```
