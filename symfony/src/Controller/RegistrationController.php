@@ -5,10 +5,12 @@ namespace App\Controller;
 use App\Entity\User;
 use App\Form\RegistrationFormType;
 use App\Http\UserApi;
+use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpClient\HttpClient;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
@@ -44,6 +46,11 @@ class RegistrationController extends AbstractController
             $userApi = new UserApi(HttpClient::create());
             $userApi->storeInformation($user);
 
+            $this->addFlash(
+                'notice',
+                'Your changes were saved!'
+            );
+
             return $this->redirectToRoute('app_show');
         }
 
@@ -54,12 +61,27 @@ class RegistrationController extends AbstractController
 
     /**
      * @Route("/show/all", name="app_show")
+     * @param LoggerInterface $logger
      * @return Response
+     * @throws \Symfony\Contracts\HttpClient\Exception\ClientExceptionInterface
+     * @throws \Symfony\Contracts\HttpClient\Exception\DecodingExceptionInterface
+     * @throws \Symfony\Contracts\HttpClient\Exception\RedirectionExceptionInterface
+     * @throws \Symfony\Contracts\HttpClient\Exception\ServerExceptionInterface
+     * @throws \Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface
      */
-    public function show()
+    public function show(LoggerInterface $logger)
     {
         $userApi = new UserApi(HttpClient::create());
-        $users = $userApi->fetchInformation();
+
+        try {
+            $users = $userApi->fetchInformation();
+        } catch (\Exception $exception) {
+            $logger->error($exception->getMessage());
+        }
+
+        if (!$users) {
+            throw new NotFoundHttpException('The user does not exists.');
+        }
 
         return $this->render(
             'registration/show.html.twig',

@@ -1,19 +1,39 @@
 ### Docker Symfony
+
 This is a stack for run Symfony 5, PHP 8 using docker-compose tool
 
+### Using Docker
+
+You need  [Docker](https://github.com/docker/docker) and  [docker-compose](https://github.com/docker/compose).
+
 ### Installation
+
 First, clone repository:
 
 ```bash
 $ git clone https://github.com/pjurasek/registration-with-api.git
 ```
 
-Run:
+Enter into folder where is `docker-compose.yml` file.
+
 ```bash
-$ docker-compose up -d --build
+$ cd registration-with-api/docker
+```
+
+Build Docker images:
+
+```bash
+$ docker-compose build
+```
+
+Run Docker containers in detached mode:
+
+```bash
+$ docker-compose up -d
 ```
 
 ### How it works?
+
 The `docker-compose` built images:
 - `postgres`: This is the Postgres database container.
 - `php-fpm`: This is the PHP FPM container including the application volume mounted on.
@@ -22,7 +42,6 @@ The `docker-compose` built images:
 The result is the following running containers:
 ```bash
 $ docker-compose ps
-
 ```
 
 ### Troubleshooting
