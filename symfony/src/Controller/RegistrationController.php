@@ -48,7 +48,7 @@ class RegistrationController extends AbstractController
 
             $this->addFlash(
                 'notice',
-                'Your changes were saved!'
+                'You registered a new user!'
             );
 
             return $this->redirectToRoute('app_show');
